@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'M2_HOME'   // nom défini dans Manage Jenkins > Tools
-        jdk   'JAVA_HOME' // idem
+        maven 'M2_HOME'
     }
 
     stages {
@@ -15,17 +14,17 @@ pipeline {
         }
 
         stage('MVN Clean') {
-            steps { bat 'mvn clean' }
+            steps { sh 'mvn clean' }
         }
 
         stage('Artifact Construction') {
-            steps { bat 'mvn package -DskipTests' }
+            steps { sh 'mvn package -DskipTests' }
         }
 
         stage('Unit Tests') {
-            steps { bat 'mvn test' }
+            steps { sh 'mvn test' }
             post {
-                always { junit 'target/surefire-reports/*.xml' }
+                always { junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml' }
             }
         }
     }
